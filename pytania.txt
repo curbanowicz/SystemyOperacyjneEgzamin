@@ -279,6 +279,26 @@ chyba że proces sam zrzeknie się procesora.
 Jeżeli planowania dokonujemy dodatkowo w sytuacjach 2. i 3. to mówimy o
 planowaniu z wywłaszczaniem.
 
+Symulacja algorytm SJF 2 wersje FCFS RUN Robin
+Diagram  Gannta
+
+Co to jest postarzanie?
+● Postarzanie (ang aging): Zwiększaj priorytet procesu długo oczekującego na
+procesor
+
+
+
+Wykład VII
+
+
+
+
+Wykład VIII
+
+
+
+Wykład IX
+
 
 
 Wykład X
