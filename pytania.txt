@@ -231,6 +231,42 @@ trudna.
 
 Wykład VI
 
+Jaka jest funkcja planisty długoterminowego?
+● Planowanie długoterminowe. Decyzja o dodaniu procesu do puli procesów
+wykonywanych (systemy wsadowe).
+– Określa stopień wieloprogramowości.
+
+Jaka jest funkcja planisty średnioterminowego?
+ Planowanie średnioterminowe. Decyzja o dodaniu (usunięciu) procesu do puli
+procesów częściowo lub całkowicie obecnych w pamięci.
+– Związane z wymianą i zarządzaniem pamięcią.
+
+Jaka jest funkcja planisty krótkoterminowego?
+Planowanie krótkoterminowe. Decyzja o przyznaniu procesowi (w stanie
+Gotowy) procesora. (dzisiejszy wykład) 
+
+Jaka jest funkcja planisty dysk?
+Planowanie dysku. Decyzja o wyborze żądania we-wy spośród żądań
+zgłoszonych przez procesy.
+
+Co to jest wywłaszczenie?
+Planowanie możemy wykonywać gdy proces:
+1. Przeszedł do stanu aktywnego do stanu oczekiwania (uśpienia) n.p. z powodu
+zgłoszenia zamówienia we-wy.
+2. Proces przeszedł ze stanu aktywnego do stanu gotowego n.p. z powodu
+przerwania
+3. Proces przeszedł od stanu oczekiwania do stanu gotowego.
+4. Proces zakończył pracę.
+Jeżeli planowania dokonujemy wyłącznie w sytuacjach 1. oraz 4. to mówimy o
+planowaniu bez wywłaszczania. Procesowi nigdy nie zostanie odebrany procesor,
+chyba że proces sam zrzeknie się procesora.
+Jeżeli planowania dokonujemy dodatkowo w sytuacjach 2. i 3. to mówimy o
+planowaniu z wywłaszczaniem.
+
+
+Wykład XI
+
+
 Podaj przykład tylnych drzwi? 
 Tylne drzwi (ang. trapdoor) Mechanizm, pozwalający osobie która jest świadoma
 jego istnienia na uzyskanie dostępu.
@@ -293,6 +329,10 @@ wypadku nie da się utrzymać płynnej animacji.
 Komputer sterujący pralką musi wyłączyć pompę możliwie szybko po otrzymaniu sygnału o
 napełnieniu zbiornika. Jeżeli zrobi to po 10 minutach to pralka zostanie zalana.
 Powyższa definicja odnosi się do systemu typu hard real-time.
+
+
+Wykład XIV
+
 
 Większość systemów dla komputerów biurkowych i serwerów (np Uniks, Windows) to
 systemy typu soft real-time nie gwarantujące dotrzymania terminów. Zamiast tego
