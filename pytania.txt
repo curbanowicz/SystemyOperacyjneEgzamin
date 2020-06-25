@@ -249,6 +249,22 @@ Jaka jest funkcja planisty dysk?
 Planowanie dysku. Decyzja o wyborze żądania we-wy spośród żądań
 zgłoszonych przez procesy.
 
+Które poziomy planowania obecnie nie wytępują we współczesnych systemach?
+● Planowanie długoterminowe. Decyzja o dodaniu procesu do puli procesów
+wykonywanych (systemy wsadowe).
+– Określa stopień wieloprogramowości.
+● Planowanie średnioterminowe. Decyzja o dodaniu (usunięciu) procesu do puli
+procesów częściowo lub całkowicie obecnych w pamięci.
+– Związane z wymianą i zarządzaniem pamięcią.
+● Planowanie krótkoterminowe. Decyzja o przyznaniu procesowi (w stanie
+Gotowy) procesora. (dzisiejszy wykład)
+● Planowanie dysku. Decyzja o wyborze żądania we-wy spośród żądań
+zgłoszonych przez procesy.
+● W interakcyjnych systemach z podziałem czasu planowanie długoterminowe
+(często również planowanie średnioterminowe) może nie występować.
+Przykład: Linux. 
+
+
 Co to jest wywłaszczenie?
 Planowanie możemy wykonywać gdy proces:
 1. Przeszedł do stanu aktywnego do stanu oczekiwania (uśpienia) n.p. z powodu
@@ -262,6 +278,23 @@ planowaniu bez wywłaszczania. Procesowi nigdy nie zostanie odebrany procesor,
 chyba że proces sam zrzeknie się procesora.
 Jeżeli planowania dokonujemy dodatkowo w sytuacjach 2. i 3. to mówimy o
 planowaniu z wywłaszczaniem.
+
+
+
+Wykład X
+Wiadomo że większy rozmiar bloku prowadzi do większej wydajności systemu pliku, dlaczego zatem nie spotyka się bloków o rozmiarze 256 MB?
+
+Do czego służy system plików z kroniką
+
+Do czego służy blok indeksowy
+
+Gdzie w systemie plików MS docs są przechowywane atrybuty wszelkie pliku
+
+Podaj wady ciągłej alokacji systemu plików
+
+Która ze znanych ci metod alokacji bloków plikom zupełnie nie nadaje się do plików o dostępie swobodnym
+
+Dlaczego za pomocą plików odwzorowanych pamięci, możemy otrzymać najszybszy możliwy odczyt pliku z pamięci
 
 
 Wykład XI
