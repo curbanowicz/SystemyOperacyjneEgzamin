@@ -279,27 +279,16 @@ chyba że proces sam zrzeknie się procesora.
 Jeżeli planowania dokonujemy dodatkowo w sytuacjach 2. i 3. to mówimy o
 planowaniu z wywłaszczaniem.
 
-Symulacja algorytm SJF 2 wersje FCFS RUN Robin
-Diagram  Gannta
-
-Co to jest postarzanie?
-● Postarzanie (ang aging): Zwiększaj priorytet procesu długo oczekującego na
-procesor
-
-
-
-Wykład VII
-
-
-
-
-Wykład VIII
-
-
-
 Wykład IX
+Co to jest cylinder w dysku twardym?
 
+Podaj definice czasu dostępu/wyszukiwania/oczekiwania oraz czasu transferu sektorów
 
+(otwarte) Podaj kolejność obsługi żądań przy pomocy algorytmu FCFS, SSTF, C-LOOK - 6pkt
+
+Dlaczego RAID Level 0 nie jest prawdziwą macierzą RAID?
+
+Który typ macierzy pozwala na najszybsze rozładowanie kolejki żądań zapełnionej żądaniami odczytu?
 
 Wykład X
 Wiadomo że większy rozmiar bloku prowadzi do większej wydajności systemu pliku, dlaczego zatem nie spotyka się bloków o rozmiarze 256 MB?
