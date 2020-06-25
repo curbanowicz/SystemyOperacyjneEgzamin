@@ -1,0 +1,315 @@
+Wykład IV
+Kiedy mówimy o warunku wyścigu?
+A race condition arises in software when a computer program, to operate properly, 
+depends on the sequence or timing of the program's processes or threads . 
+Critical race conditions cause invalid execution and software bugs. Critical race conditions often happen when the 
+processes or threads depend on some shared state. Operations upon shared states are
+done in critical sections that must be mutually exclusive.
+Failure to obey this rule can corrupt the shared state.
+
+O warunku wyścigu mówimy gdy wynik zależy od kolejności wykonywania instrukcji procesów.
+W poprawnym programie nie powinno być wyścigów
+
+Dlaczego w przypadku programu współbieżnego testowanie ma ograniczoną przydatność?
+
+Ze względu na nideterminizm (nigdy nie wiemy w jakiej kolejności wykonują się procesy) do błędu może(ale nie musi dojść). 
+W związku z tym przydatność testowania do badania poprawności programów współbieżnych jest mocno ograniczona.
+
+Podaj 3 warunki którepowinny spełnić rozwiązanie sekcji krytycznej?
+
+● Wzajemne wykluczanie.
+– W danej chwili tylko jeden proces może być w sekcji krytycznej.
+● Postęp
+– Proces który nie wykonuje sekcji krytycznej nie może blokować procesów
+chcących wejść do sekcji.
+● Ograniczone czekanie
+– Proces nie może czekać na wejście do sekcji krytycznej w nieskończoność
+
+Jaka jest wada mechanizmu synchronizacji wykorzystujące czekanie aktywne?
+
+● Marnowany jest czas procesora
+– Zmarnowany czas można by przeznaczyć na wykonanie innego procesu.
+● Uzasadnione gdy:
+– Czas oczekiwania stosunkowo krótki (najlepiej krótszy od czasu przełączenia
+kontekstu)
+– Liczba procesów ≅ Liczba procesorów
+● Przykład zastosowania jądro Linux-a w wersji SMP
+– Funkcje typu spin_lock
+● Alternatywą do czekania aktywnego jest przejście procesu w stan zablokowany
+– Semafory
+– Monitory
+
+Podaj 2 wady mechanizmu synchronizacji opartego o maskowanie przerwa:
+
+Wyłącz przerwania
+– Nie działa w systemach wieloprocesorowych
+– Problematyczne w systemach z ochroną
+– Wykorzystywane do synchronizacji w obrębie jądra (zakładając jeden procesor)
+● Rozwiązania z czekaniem aktywnym
+– Algorytm Petersona dla dwóch procesów – wymaga trzech zmiennych !!!
+– Algorytm piekarni dla wielu procesów.
+– Rozwiązania wykorzystujące specjalne instrukcje maszynowe np. rozkaz zamiany:
+● XCHG rejestr, pamięć
+● Architektura systemu musi zapewniać atomowe wykonanie instrukcji.
+● W systemach wieloprocesorowych nie jest to trywialne
+
+Jak działa operacja wait w semaforze?
+● Definicja klasyczna (E. Dijkstra):
+– Wait (czekaj): while (S<=0) ; S--
+– Signal(sygnalizuj): S++
+– Operacje Wait i Signal są operacjami atomowymi
+● Początkowa wartość S – liczba wywołań operacji Wait bez wstrzymywania.
+● Definicja klasyczna oparta jest na aktywnym czekaniu. W praktyce używa się innej
+definicji opartej na usypianiu procesów (M. Ben-Ari) :
+– Wait: Jeżeli S>0, to S=S-1, w przeciwnym wypadku wstrzymaj (przełącz w stan oczekujący)
+wykonywanie procesu – proces ten nazywany wstrzymanym przez semafor.
+ Signal: Jeżeli są procesy wstrzymane przez semafor, to obudź jeden z nich, w przeciwnym
+wypadku S=S+1.
+
+Jak działa operacja signal w semaforze?
+Nieco zmodyfikowana (ale równoważna z
+definicją Ben Ariego) implementacja –
+zakładamy że wartość zmiennej może być
+ujemna – wtedy przechowuje ona liczbę
+wstrzymanych procesów.
+
+Semaphore::Wait() ()
+{
+ value -= 1;
+ if (value < 0) {
+ Add(this_process,pl)
+ Sleep (this_process);
+ }
+}
+
+Podaj definicje stanu zakleszczenia
+● Zbiór procesów jest w stanie blokady, kiedy każdy z nich czeka na zdarzenie,
+które może zostać spowodowane wyłącznie przez jakiś inny proces z tego
+zbioru.
+● Samochody nie mają wstecznego biegu = Brak wywłaszczeń zasobów
+
+Podaj definicje zagłodzenia
+● Proces czeka w nieskończoność, pomimo że zdarzenie na które czeka występuje. (Na
+zdarzenie reagują inne procesy)
+● Przykład: Jednokierunkowe przejście dla pieszych, przez które w danej chwili może
+przechodzić co najwyżej jedna osoba.
+– Osoby czekające na przejściu tworzą kolejkę.
+– Z kolejki wybierana jest zawsze najwyższa osoba
+– Bardzo niska osoba może czekać w nieskończoność.
+● Zamiast kolejki priorytetowej należy użyć kolejki FIFO (wybieramy tę osobę, która
+zgłosiła się najwcześniej).
+● Inny przykład: z grupy procesów gotowych planista krótkoterminowy przydziela zawsze
+procesor najpierw procesom profesorów a w dalszej kolejności procesom studentów.
+– Jeżeli w systemie jest wiele procesów profesorów, to w kolejce procesów gotowych znajdzie się
+zawsze co najmniej jeden i proces studenta będzie czekał w nieskończoność na przydział
+procesora.
+
+Podaj specyfikacje problemu czytelników i pisarzy
+● Modyfikacja problemu sekcji krytycznej.
+● Wprowadzamy dwie klasy procesów: czytelników i pisarzy.
+● Współdzielony obiekt nazywany jest czytelnią.
+● W danej chwili w czytelni może przebywać
+– Jeden proces pisarza i żaden czytelnik.
+– Dowolna liczba czytelników i żaden pisarz.
+● Rozwiązanie prymitywne: Potraktować czytelnię jak obiekt wymagający
+wzajemnego wykluczania wszystkich typów procesów.
+– Prymitywne, ponieważ ma bardzo słabą wydajność. Jeżeli na wejście do czytelni
+czeka wielu czytelników i żaden pisarz to możemy wpuścić od razu wszystkich
+czytelników
+● W literaturze opisano rozwiązania:
+– Z możliwością zagłodzenia pisarzy
+– Z możliwością zagłodzenia czytelników
+– Poprawne
+
+Wykład V
+
+Podaj wade synchronizacji semaforów
+● Jeden z pierwszych mechanizmów synchronizacji
+● Generalnie jest to mechanizm bardzo niskiego poziomu - trochę odpowiadający
+programowaniu w assemblerze.
+● Duża podatność na błędy, trudno wykazać poprawność programu
+● Przykład: Jeżeli zapomnimy o operacji signal, nastąpi blokada
+● Bardziej strukturalne mechanizmy synchronizacji
+– Regiony krytyczne
+– Monitory
+
+Jak działa operacja c.wait() na zmiennej warunkowej c monitoruj
+– C.wait() Zawiesza wykonanie procesu, i jednocześnie zwalnia monitor pozwalając
+innym procesom wejść do monitora.
+
+Jak działa operacja c.signal() na zmiennej warunkowej c monitoruj
+C.signal() Jeżeli nie ma procesów zawieszonych przez operację wait nic się nie
+dzieje. W przeciwnym wypadku dokładnie jeden proces zawieszony przez operacje
+wait zostanie wznowiony. (od następnej instrukcji po wait).
+
+Jaka jest róznica pomiedzy c.signal() a c.signalAll()
+– Możliwa jest trzecia operacja C.signallAll() wznawiająca wszystkie zawieszone
+procesy.
+
+
+W jaki sposób możemy utworzyć wątki w Javie?
+class Worker extends Thread
+{
+ public void run() {
+ System.out.println("Wątek roboczy");
+ }
+}
+public class First
+{
+ public static void main(String args[]) {
+ Worker runner = new Worker();
+ runner.start();
+ System.out.println("Wątek główny");
+runner.join();
+ }
+}
+● Dwie metody:
+– Rozszerzenie klasy Thread
+– Implementacja interfejsu Runnable
+● Rozszerzenie klasy Thread
+– Metoda run jest wykonywana w
+odrębnym wątku
+– Deklarujemy obiekt klasy
+– Metoda start() uruchamia wątek.
+● Reprezentowany przez obiekt klasy
+Worker.
+– Metoda join() zawiesza aktualny wątek
+do momentu zakończenia wątku
+reprezentowanego przez obiekt klasy
+Thread.
+
+Jaka jest różnica pomiedzy wątkiem obiektem Javy a monitorem?
+Obiekt w Javie odpowiada monitorowi z maksymalnie jedną zmienną warunku. To
+rozwiązanie obniża wydajność synchronizacji - każdy wątek po obudzeniu, musi
+sprawdzić czy obudziło go zdarzenie na które czekał.
+– W przypadku producenta - konsumenta z ograniczonym buforem mamy dwa typy zdarzeń
+(bufor niepusty oraz bufor niepełny)
+
+Synchronizacja w Javie, a monitory.
+● W monitorze możemy zadeklarować wiele zmiennych warunkowych.
+● Klasa w Javie w przybliżeniu odpowiada monitorowi z jedną zmienną
+warunkową.
+● Różnice są widoczne w przypadku rozwiązania problemu producentkonsument.
+– Wersja z monitorami wykorzystuje dwie zmienne warunkowe
+– W wersji w Javie konsument oczekujący na pojawienie się elementu w buforze
+może zostać powiadomiony przez innego konsumenta.
+– Z tego powodu po obudzeniu należy raz jeszcze sprawdzić warunek (pętla while).
+● Brak zmiennych warunkowych prowadzi do niskiej wydajności: np. budzeni są
+wszyscy czekający konsumenci ale tylko jeden z nich może kontynuować.
+● Specyfikacja Javy mówi, że wątek wywołujący metodę notify kontynuuje
+pierwszy.
+– Odpowiada to semantyce Mesa
+
+Zaimplementuj algorytm współbieżny z 3 zmiennymi warunku
+programujemy w standardzie POSIX Threads ile semaforów i
+muteksów i instancji typu pthread_cond_t uzyjesz w swoim algorytmie?
+
+Różnica p_thread_signal p_thread_broadcast
+Jeżeli wątek przebywający wewnątrz funkcji monitora (a zatem posiadający mutex),
+zechce wykonać operację wait na zmiennej warunku, może wykonać następujący kod:
+// Zwolnienie muteksa i oczekiwanie na zmiennej warunku.
+pthread_cond_wait(&condition,&mutex);
+// Obudzenie nastąpi po wykonaniu operacji signal lub broadcast
+// i re-akwizycja muteksa.
+● Wątek chcący wykonać operację signal monitora (i przebywający wewnątrz monitora
+tzn. posiadający muteks) wykonuje następujący kod:
+// Czy to jest semantyka Hoare'a czy też Mesa ?
+pthread_cond_signal(&condition);
+
+
+roznice pomiedzy operacja receive a nieblokujaca receive
+● Dostarcza dwie operacje.
+– send(odbiorca,dane)
+– receive(nadawca,dane)
+● Send i receive mogą wymagać podania kanału.
+● Idealne dla problemu producent konsument.
+● Na ogół wymaga kopiowania danych => możliwy spadek wydajności.
+● Dobra metoda synchronizacji dla systemów rozproszonych.
+– Wydajna realizacja pamięci współdzielonej w systemie rozproszonym jest bardzo
+trudna.
+
+
+Wykład VI
+
+Podaj przykład tylnych drzwi? 
+Tylne drzwi (ang. trapdoor) Mechanizm, pozwalający osobie która jest świadoma
+jego istnienia na uzyskanie dostępu.
+Przykład: każdy który wykona telnet na port 88888 otrzymuje uprawnienia
+Administratora.
+
+Programiści często używają tylnych drzwi w celu ułatwienia debugowania systemu
+(mogą zapomnieć je usunąć, przykład jednej z bazy danych, tylne drzwi wykryto
+dopiero, gdy firma udostępniła kod na zasadach Open Source).
+
+Włamywacze pozostawiają/instalują tylne drzwi aby ułatwić sobie (i być może innym
+kolejne włamania).
+
+Podaj przykład bomby logicznej?
+
+kod umieszczony w legalnym programie, który eksploduje gdy
+spełnione są pewne warunki np.
+– Programista zostanie skreślony z listy płac firmy.
+– Firma pisząca program nie otrzyma zapłaty
+
+Co to jest koń trojański?
+Program, często atrakcyjny (np. gra komputerowa, program kompresji
+plików, ...), często dostępny publicznie w internecie, który dodatkowo
+wykonuje pewne złośliwe czynności.
+– Np. co 12 miesięcy formatuje dysk.
+– Także programy typu spyware.
+
+Jaka jest różnica pomiędzy akronem a wirusem?
+
+ Wirus - program zdolny do powielania przez dodanie swojego kodu do innego programu.
+Uruchomienie innego programu powoduje ponowne powielenie się wirusa.
+● Wirusy mogą także infekować: sektor startowy (boot sektor), dokumenty programów
+aplikacyjnych np. pliki Worda i Excela (bo mogą zawierać kod Visual Basica uruchamiany
+automatycznie po wczytaniu dokumentu - dziękujemy ci M$) a nawet kod źródłowy (np. w
+języku C)
+
+Ochrona przed wirusami
+● Generalnie nie należy uruchamiać niepewnego kodu, oprócz tego
+specjalistyczne oprogramowanie typu:
+● Skanery antywirusowe: porównują kod wirusa z bazą danych.
+– Wirusy starają się unikać wykrycia: szyfrowanie, wirusy polimorficzne.
+– Skanowanie trwa długo.
+– Jeżeli wirusa nie ma w bazie danych - problemy.
+● Sprawdzanie spójności: utrzymuj sumy kontrolne dla każdego pliku (wirus
+może próbować je zmienić)
+● Blokery: Uniemożliwiaj podejrzane zachowanie np. zapis do plików .exe - ale
+robi to wiele legalnych programów.
+● Kontrola zachowania (ang. behavioral checking) wykrywaj zmiany zachowania
+się programu - przedmiot badań naukowych.
+
+Jaka jest roznice pomiedzy systemami hard real time i soft real time?
+
+System czasu rzeczywistego to takim system, w którym poprawność zależy nie tylko od
+poprawności wyników, ale również od dostarczenia tych wyników przed upływem
+nieprzekraczalnego terminu (ang. deadline). Przykłady:
+Komputer sterujący rakietą musi podjąć obliczyć nowy kurs. Jeżeli wyniki zostaną obliczone zbyt
+późno rakieta się rozbije.
+Odtwarzacz DVD musi zdekodować klatkę w ciągu 25 ms (50 klatek na sekundę). W przeciwnym
+wypadku nie da się utrzymać płynnej animacji.
+Komputer sterujący pralką musi wyłączyć pompę możliwie szybko po otrzymaniu sygnału o
+napełnieniu zbiornika. Jeżeli zrobi to po 10 minutach to pralka zostanie zalana.
+Powyższa definicja odnosi się do systemu typu hard real-time.
+
+Większość systemów dla komputerów biurkowych i serwerów (np Uniks, Windows) to
+systemy typu soft real-time nie gwarantujące dotrzymania terminów. Zamiast tego
+zdefiniowano w nich specjalną klasę procesów: procesy klasy czasu rzeczywistego. Procesy
+tej klasy zawsze otrzymują procesor przed innymi procesam
+
+Jakie są procesy czasu rzeczywistego w systemach Uniksowych?
+
+Standard POSIX1.b określa dwie klasy procesów czasu rzeczywistego:
+SCHED_FIFO oraz SCHED_RR.. Dodatkowo każdy proces ma statyczny
+priorytet z zakresu 1-99.
+Procesy obydwu klas czasu rzeczywistego mają bezwzględny priorytet nad zwykłymi
+procesami (klasa SCHED_OTHER).
+Procesy klasy SCHED_FIFO planowane są na podstawie algorytmu FCFS.
+Procesowi klasy SCHED_FIFO o najwyższym aktualnie priorytecie statycznym w
+kolejce procesów gotowych nie zostanie odebrany procesor.
+Procesy klasy SCHED_RR (RR to round robin) o identycznym priorytecie
+statycznym są planowane w ramach algorytmu rotacyjnego.
+System Uniksowy zgodny ze standardem POSIX1.b jest systemem klasy soft realtime.
+
